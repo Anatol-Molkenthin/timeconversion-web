@@ -1,0 +1,150 @@
+/* custom.css — All project-specific styles and Pico.css overrides         */
+/* RULE: All custom properties MUST be prefixed --tc- (never --primary etc) */
+
+/* ── Design Tokens ─────────────────────────────────────────────────────── */
+
+:root {
+  /* Primary brand colour — teal */
+  --tc-primary:           #0D9488; /* teal-600 */
+  --tc-primary-hover:     #0F766E; /* teal-700 */
+
+  /* Hero zone */
+  --tc-hero-bg-from:      #0D9488;
+  --tc-hero-bg-to:        #0F766E;
+  --tc-hero-min-height:   160px;
+  --tc-hero-text:         #FFFFFF;
+
+  /* Pill — default state */
+  --tc-pill-border:       #E5E7EB; /* neutral-200 */
+  --tc-pill-text:         #374151; /* neutral-700 */
+
+  /* Pill — active state */
+  --tc-pill-active-bg:    #0D9488;
+  --tc-pill-active-text:  #FFFFFF;
+
+  /* Override Pico's primary so its default focus ring uses our teal */
+  --pico-primary:         #0D9488;
+  --pico-primary-hover:   #0F766E;
+
+  /* Base font */
+  --pico-font-family:     'Inter', system-ui, sans-serif;
+}
+
+/* ── Dark mode token overrides ─────────────────────────────────────────── */
+/* Pico handles dark mode automatically via prefers-color-scheme.          */
+/* Override tokens here so our custom components also adapt.               */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tc-primary:          #2DD4BF; /* teal-400 — higher contrast on dark bg */
+    --tc-primary-hover:    #14B8A6; /* teal-500 */
+    --tc-hero-bg-from:     #134E4A; /* teal-950 */
+    --tc-hero-bg-to:       #0F766E; /* teal-700 */
+    --tc-pill-border:      #374151; /* neutral-700 */
+    --tc-pill-text:        #D1D5DB; /* neutral-300 */
+    --tc-pill-active-bg:   #2DD4BF;
+    --tc-pill-active-text: #111827; /* neutral-900 — dark text on light teal */
+    --pico-primary:        #2DD4BF;
+    --pico-primary-hover:  #14B8A6;
+  }
+}
+
+/* ── Hero Zone ──────────────────────────────────────────────────────────── */
+
+#hero-zone {
+  background: linear-gradient(135deg, var(--tc-hero-bg-from), var(--tc-hero-bg-to));
+  min-height: var(--tc-hero-min-height);
+  padding: 2rem 1.5rem;
+  color: var(--tc-hero-text);
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+#hero-content {
+  margin: 0;
+  font-size: 1.25rem;
+  opacity: 0.85;
+}
+
+/* ── Input Zone ─────────────────────────────────────────────────────────── */
+
+#input-zone {
+  margin-bottom: 1rem;
+}
+
+#value-input {
+  font-size: 1.25rem; /* Minimum 16px — prevents iOS auto-zoom on focus */
+  margin-bottom: 1rem;
+}
+
+/* ── Unit Pill Row ──────────────────────────────────────────────────────── */
+
+#pill-row {
+  display: flex;
+  flex-wrap: wrap; /* Pills wrap to 2 rows on narrow screens */
+  gap: 6px;
+}
+
+/* Individual pill */
+.pill {
+  border-radius: 999px;
+  border: 1.5px solid var(--tc-pill-border);
+  color: var(--tc-pill-text);
+  background: transparent;
+  min-height: 44px;  /* WCAG touch target minimum */
+  min-width:  44px;
+  padding: 0.25rem 0.875rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 100ms ease, background 100ms ease, color 100ms ease;
+  /* Reset any Pico button defaults that might interfere */
+  margin: 0;
+}
+
+/* Active / selected pill */
+.pill[aria-checked="true"] {
+  background:    var(--tc-pill-active-bg);
+  color:         var(--tc-pill-active-text);
+  border-color:  var(--tc-pill-active-bg);
+}
+
+/* Hover states — ONLY on pointer devices, never on touch */
+@media (hover: hover) {
+  .pill:hover {
+    border-color: var(--tc-primary);
+    color:        var(--tc-primary);
+  }
+
+  .pill[aria-checked="true"]:hover {
+    background:   var(--tc-primary-hover);
+    border-color: var(--tc-primary-hover);
+    color:        var(--tc-pill-active-text);
+  }
+}
+
+/* ── Focus Rings ────────────────────────────────────────────────────────── */
+
+.pill:focus-visible,
+#value-input:focus-visible {
+  outline:        2px solid var(--tc-primary);
+  outline-offset: 2px;
+}
+
+/* ── Reduced Motion ─────────────────────────────────────────────────────── */
+/* Zero all transitions when user has requested reduced motion.             */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration:   0ms !important;
+    animation-duration:    0ms !important;
+    animation-delay:       0ms !important;
+  }
+}

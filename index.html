@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Decimal Time Converter</title>
+
+    <!-- Pico.css — classless CSS framework for semantic HTML -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+
+    <!-- Google Fonts — Inter for UI, loaded after Pico -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Project styles — overrides and custom components -->
+    <link rel="stylesheet" href="custom.css" />
+  </head>
+
+  <body>
+    <main class="container">
+
+      <!-- Hero Zone — displays demo, result, or error state -->
+      <section
+        id="hero-zone"
+        role="region"
+        aria-label="Conversion result"
+        aria-live="polite"
+      >
+        <p id="hero-content">Enter a decimal time value above</p>
+      </section>
+
+      <!-- Input Zone -->
+      <section id="input-zone">
+
+        <input
+          type="text"
+          id="value-input"
+          aria-label="Enter decimal time value"
+          placeholder="e.g. 2.5"
+          autocomplete="off"
+          spellcheck="false"
+        />
+
+        <!-- Unit Pill Row — clicking a pill selects unit AND triggers conversion -->
+        <div
+          id="pill-row"
+          role="radiogroup"
+          aria-label="Select time unit"
+        >
+          <button class="pill" role="radio" data-unit="seconds" aria-checked="false">Sec</button>
+          <button class="pill" role="radio" data-unit="minutes" aria-checked="true">Min</button>
+          <button class="pill" role="radio" data-unit="hours"   aria-checked="false">Hr</button>
+          <button class="pill" role="radio" data-unit="days"    aria-checked="false">Day</button>
+          <button class="pill" role="radio" data-unit="weeks"   aria-checked="false">Wk</button>
+          <button class="pill" role="radio" data-unit="months"  aria-checked="false">Mo</button>
+          <button class="pill" role="radio" data-unit="years"   aria-checked="false">Yr</button>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ES6 module entry point — the ONLY script tag -->
+    <script type="module" src="js/ui.js"></script>
+  </body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>timeconversion-web — UX Design Directions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ─── Design Tokens ─────────────────────────────────────── */
+    :root {
+      --teal: #0D9488;
+      --teal-light: #CCFBF1;
+      --teal-dark: #0F766E;
+      --neutral-50: #F9FAFB;
+      --neutral-100: #F3F4F6;
+      --neutral-200: #E5E7EB;
+      --neutral-400: #9CA3AF;
+      --neutral-500: #6B7280;
+      --neutral-700: #374151;
+      --neutral-800: #1F2937;
+      --neutral-900: #111827;
+      --white: #FFFFFF;
+      --error: #DC2626;
+      --font-ui: 'Inter', system-ui, sans-serif;
+      --font-mono: 'Courier New', monospace;
+    }
+
+    /* ─── Showcase Shell ────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-ui);
+      background: var(--neutral-100);
+      color: var(--neutral-900);
+      padding: 40px 20px;
+    }
+
+    .showcase-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .showcase-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 8px;
+    }
+    .showcase-header p {
+      color: var(--neutral-500);
+      font-size: 0.95rem;
+    }
+    .badge {
+      display: inline-block;
+      background: var(--teal);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 2px 10px;
+      border-radius: 999px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .directions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .direction-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    .direction-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--neutral-400);
+      margin-bottom: 6px;
+    }
+    .direction-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+      margin-bottom: 4px;
+    }
+    .direction-desc {
+      font-size: 0.8rem;
+      color: var(--neutral-500);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .mockup {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--neutral-200);
+    }
+
+    /* ─── Shared component styles ───────────────────────────── */
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .pill {
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1.5px solid var(--neutral-200);
+      background: var(--white);
+      color: var(--neutral-700);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+    }
+    .pill:hover { border-color: var(--teal); color: var(--teal); }
+    .pill.active {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: white;
+    }
+
+    .input-field {
+      width: 100%;
+      font-family: var(--font-ui);
+      font-size: 1.15rem;
+      padding: 12px 16px;
+      border: 1.5px solid var(--neutral-200);
+      border-radius: 8px;
+      color: var(--neutral-900);
+      background: var(--white);
+      outline: none;
+    }
+    .input-field:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13,148,136,0.15); }
+
+    .result-primary {
+      font-family: var(--font-mono);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--neutral-900);
+      line-height: 1.2;
+    }
+    .result-secondary {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--neutral-500);
+      margin-top: 8px;
+    }
+    .result-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--neutral-400);
+      margin-bottom: 4px;
+    }
+    .copy-btn {
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--teal);
+      background: var(--teal-light);
+      border: none;
+      border-radius: 4px;
+      padding: 3px 10px;
+      cursor: pointer;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* ─── Direction 1: Centered Minimal ─────────────────────── */
+    .d1 {
+      background: var(--white);
+      padding: 32px 28px;
+    }
+    .d1 .tool-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .d1 .input-wrap { margin-bottom: 12px; }
+    .d1 .section-label {
+      font-size: 0.75rem;
+      color: var(--neutral-400);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .d1 .pill-row { margin-bottom: 28px; }
+    .d1 .result-zone {
+      border-top: 1px solid var(--neutral-200);
+      padding-top: 24px;
+    }
+
+    /* ─── Direction 2: Hero Result ───────────────────────────── */
+    .d2 {
+      background: var(--white);
+      padding: 0;
+    }
+    .d2 .result-hero {
+      background: linear-gradient(135deg, var(--teal) 0%, #0F766E 100%);
+      padding: 28px 28px 24px;
+      color: white;
+    }
+    .d2 .result-hero .result-primary { color: white; font-size: 2.75rem; }
+    .d2 .result-hero .result-label { color: rgba(255,255,255,0.7); }
+    .d2 .result-hero .result-secondary { color: rgba(255,255,255,0.85); }
+    .d2 .input-zone { padding: 24px 28px; }
+    .d2 .input-zone .section-label {
+      font-size: 0.75rem;
+      color: var(--neutral-400);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .d2 .pill-row { margin-top: 12px; }
+
+    /* ─── Direction 3: Tile Grid Pills ──────────────────────── */
+    .d3 {
+      background: var(--white);
+      padding: 28px;
+    }
+    .d3 .tool-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--neutral-400);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+    }
+    .d3 .unit-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin: 12px 0 24px;
+    }
+    .d3 .unit-tile {
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 10px 4px;
+      border-radius: 8px;
+      border: 1.5px solid var(--neutral-200);
+      background: var(--white);
+      color: var(--neutral-700);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .d3 .unit-tile:hover { border-color: var(--teal); color: var(--teal); }
+    .d3 .unit-tile.active { background: var(--teal); border-color: var(--teal); color: white; }
+    .d3 .result-zone {
+      background: var(--neutral-50);
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid var(--neutral-200);
+      margin-top: 4px;
+    }
+
+    /* ─── Direction 4: Split Layout ─────────────────────────── */
+    .d4 {
+      background: var(--white);
+      padding: 0;
+      display: flex;
+      min-height: 280px;
+    }
+    .d4 .left-panel {
+      flex: 1;
+      padding: 28px 20px 28px 28px;
+      border-right: 1px solid var(--neutral-200);
+    }
+    .d4 .right-panel {
+      flex: 1.2;
+      padding: 28px 28px 28px 20px;
+      background: var(--neutral-50);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .d4 .panel-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--neutral-400);
+      margin-bottom: 12px;
+    }
+    .d4 .result-format {
+      margin-bottom: 16px;
+    }
+
+    /* ─── Direction 5: Floating Card ────────────────────────── */
+    .d5-outer {
+      background: linear-gradient(160deg, #F0FDFA 0%, #CCFBF1 100%);
+      padding: 32px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .d5-card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 4px 24px rgba(13,148,136,0.18), 0 1px 4px rgba(0,0,0,0.06);
+      width: 100%;
+      max-width: 380px;
+    }
+    .d5-card .app-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--teal);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .d5-card .app-icon svg { color: white; }
+    .d5-card .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 20px; }
+
+    /* ─── Direction 6: Ultra Minimal (Google-style) ──────────── */
+    .d6 {
+      background: var(--white);
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .d6 .wordmark {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 28px;
+      letter-spacing: -0.02em;
+    }
+    .d6 .input-field {
+      max-width: 360px;
+      margin: 0 auto 16px;
+      border-radius: 999px;
+      padding: 14px 24px;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid var(--neutral-200);
+    }
+    .d6 .pill-row {
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .d6 .result-primary { color: var(--teal); font-size: 2.75rem; }
+    .d6 .result-sub {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      color: var(--neutral-500);
+      margin-top: 8px;
+    }
+
+    /* ─── Evaluation guide ──────────────────────────────────── */
+    .eval-guide {
+      max-width: 1200px;
+      margin: 56px auto 0;
+      background: white;
+      border-radius: 16px;
+      padding: 28px 32px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .eval-guide h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--neutral-900);
+    }
+    .eval-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .eval-item {
+      background: var(--neutral-50);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .eval-item .check { color: var(--teal); font-weight: 700; margin-right: 6px; }
+    .eval-item strong { font-size: 0.85rem; color: var(--neutral-800); }
+    .eval-item p { font-size: 0.78rem; color: var(--neutral-500); margin-top: 4px; line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+  <div class="showcase-header">
+    <h1>timeconversion-web — Design Directions <span class="badge">6 variations</span></h1>
+    <p>White + Teal · Inter + Monospace · Pico.css base · Explore and choose what feels right</p>
+  </div>
+
+  <div class="directions-grid">
+
+    <!-- ── Direction 1: Centered Minimal ─────────────────── -->
+    <div class="direction-card">
+      <div class="direction-label">Direction 1</div>
+      <div class="direction-name">Centered Minimal</div>
+      <div class="direction-desc">Clean white surface, all elements stacked centrally. The "safe" precision choice — zero distraction, maximum focus.</div>
+      <div class="mockup">
+        <div class="d1">
+          <div class="tool-title">Time Converter</div>
+          <div class="input-wrap">
+            <div class="section-label">Enter a decimal value</div>
+            <input class="input-field" type="text" value="2.5" readonly>
+          </div>
+          <div class="section-label" style="margin-top:12px">Select time unit to convert</div>
+          <div class="pill-row" style="margin-top:6px; margin-bottom:28px">
+            <span class="pill">Sec</span>
+            <span class="pill active">Min</span>
+            <span class="pill">Hours</span>
+            <span class="pill">Days</span>
+            <span class="pill">Weeks</span>
+            <span class="pill">Months</span>
+            <span class="pill">Years</span>
+          </div>
+          <div class="result-zone">
+            <div class="result-label">Result</div>
+            <div class="result-primary">2 min 30 sec</div>
+            <div class="result-secondary">2:30 <button class="copy-btn">Copy</button></div>
+            <div class="result-secondary" style="margin-top:6px">2 minutes, 30 seconds <button class="copy-btn">Copy</button></div>
+            <div class="result-secondary" style="margin-top:6px">150 seconds total <button class="copy-btn">Copy</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Direction 2: Hero Result ───────────────────────── -->
+    <div class="direction-card">
+      <div class="direction-label">Direction 2</div>
+      <div class="direction-name">Hero Result</div>
+      <div class="direction-desc">Result is the dominant visual element — teal header zone with the answer up top, input zone below. The answer is the first thing you see.</div>
+      <div class="mockup">
+        <div class="d2">
+          <div class="result-hero">
+            <div class="result-label">2.5 minutes →</div>
+            <div class="result-primary">2 min 30 sec</div>
+            <div class="result-secondary">2:30 &nbsp;·&nbsp; 150 seconds <button style="background:rgba(255,255,255,0.2);color:white;border:none;border-radius:4px;padding:3px 10px;font-size:0.75rem;cursor:pointer;margin-left:4px">Copy</button></div>
+          </div>
+          <div class="input-zone">
+            <div class="section-label">Enter decimal value</div>
+            <input class="input-field" type="text" value="2.5" readonly>
+            <div class="section-label" style="margin-top:12px">Select unit (click to convert)</div>
+            <div class="pill-row">
+              <span class="pill">Sec</span>
+              <span class="pill active">Min</span>
+              <span class="pill">Hours</span>
+              <span class="pill">Days</span>
+              <span class="pill">Weeks</span>
+              <span class="pill">Months</span>
+              <span class="pill">Years</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Direction 3: Tile Grid Pills ──────────────────── -->
+    <div class="direction-card">
+      <div class="direction-label">Direction 3</div>
+      <div class="direction-name">Tile Grid Units</div>
+      <div class="direction-desc">Unit selector as a 4-column tile grid — large, chunky, very touch-friendly. Works like a keypad. High visual presence for the unit choice.</div>
+      <div class="mockup">
+        <div class="d3">
+          <div class="tool-title">TIME CONVERTER</div>
+          <input class="input-field" type="text" value="2.5" readonly>
+          <div class="unit-grid" style="margin-top:12px">
+            <div class="unit-tile">Sec</div>
+            <div class="unit-tile active">Min</div>
+            <div class="unit-tile">Hours</div>
+            <div class="unit-tile">Days</div>
+            <div class="unit-tile">Weeks</div>
+            <div class="unit-tile">Months</div>
+            <div class="unit-tile">Years</div>
+            <div class="unit-tile" style="color:var(--neutral-200); border-color:var(--neutral-100)"></div>
+          </div>
+          <div class="result-zone">
+            <div class="result-label">Result</div>
+            <div class="result-primary">2 min 30 sec</div>
+            <div class="result-secondary">2:30 &nbsp;·&nbsp; 150 sec total</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Direction 4: Split Layout ─────────────────────── -->
+    <div class="direction-card">
+      <div class="direction-label">Direction 4</div>
+      <div class="direction-name">Split Panel</div>
+      <div class="direction-desc">Input + unit selection on the left, full result breakdown on the right. More "dashboard" feel — all formats visible simultaneously without scrolling.</div>
+      <div class="mockup">
+        <div class="d4">
+          <div class="left-panel">
+            <div class="panel-label">Input</div>
+            <input class="input-field" type="text" value="2.5" readonly style="font-size:1rem;padding:10px 12px">
+            <div class="panel-label" style="margin-top:16px">Unit (click to convert)</div>
+            <div class="pill-row" style="flex-direction:column; gap:5px">
+              <span class="pill" style="justify-content:center">Seconds</span>
+              <span class="pill active" style="justify-content:center">Minutes</span>
+              <span class="pill" style="justify-content:center">Hours</span>
+              <span class="pill" style="justify-content:center">Days</span>
+            </div>
+            <div style="font-size:0.72rem;color:var(--neutral-400);margin-top:8px">+ Weeks · Months · Years</div>
+          </div>
+          <div class="right-panel">
+            <div class="panel-label">Results — 2.5 minutes</div>
+            <div class="result-format">
+              <div class="result-label">Standard</div>
+              <div class="result-primary" style="font-size:1.8rem">2 min 30 sec</div>
+            </div>
+            <div class="result-format">
+              <div class="result-label">Compact</div>
+              <div class="result-secondary" style="color:var(--neutral-700);font-size:1.1rem">2:30</div>
+            </div>
+            <div class="result-format">
+              <div class="result-label">Verbose</div>
+              <div class="result-secondary" style="color:var(--neutral-700)">2 minutes, 30 seconds</div>
+            </div>
+            <div class="result-format">
+              <div class="result-label">Total</div>
+              <div class="result-secondary" style="color:var(--neutral-700)">150 seconds</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Direction 5: Floating Card ────────────────────── -->
+    <div class="direction-card">
+      <div class="direction-label">Direction 5</div>
+      <div class="direction-name">Floating Card</div>
+      <div class="direction-desc">Elevated white card on a soft teal-gradient background. Feels like a native app. The tool "floats" above the page — slightly more product-like.</div>
+      <div class="mockup">
+        <div class="d5-outer">
+          <div class="d5-card">
+            <div class="d5-card app-icon" style="width:40px;height:40px;background:var(--teal);border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div class="card-title">Time Converter</div>
+            <input class="input-field" type="text" value="2.5" readonly style="margin-bottom:10px">
+            <div class="pill-row" style="margin-bottom:20px">
+              <span class="pill">Sec</span>
+              <span class="pill active">Min</span>
+              <span class="pill">Hrs</span>
+              <span class="pill">Days</span>
+              <span class="pill">Wks</span>
+              <span class="pill">Mo</span>
+              <span class="pill">Yrs</span>
+            </div>
+            <div style="border-top:1px solid var(--neutral-200);padding-top:16px">
+              <div class="result-label">Result</div>
+              <div class="result-primary" style="font-size:2rem">2 min 30 sec</div>
+              <div class="result-secondary" style="margin-top:6px">2:30 &nbsp;·&nbsp; 150 seconds total</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Direction 6: Ultra Minimal ────────────────────── -->
+    <div class="direction-card">
+      <div class="direction-label">Direction 6</div>
+      <div class="direction-name">Ultra Minimal</div>
+      <div class="direction-desc">No cards, no chrome, no borders — pure elements on white. Google calculator energy. The result in teal dominates. Maximum breathing room.</div>
+      <div class="mockup">
+        <div class="d6">
+          <div class="wordmark">timecalc</div>
+          <input class="input-field" type="text" value="2.5" readonly>
+          <div class="pill-row">
+            <span class="pill">Sec</span>
+            <span class="pill active">Min</span>
+            <span class="pill">Hours</span>
+            <span class="pill">Days</span>
+            <span class="pill">Weeks</span>
+            <span class="pill">Months</span>
+            <span class="pill">Years</span>
+          </div>
+          <div class="result-primary" style="color:var(--teal)">2 min 30 sec</div>
+          <div class="result-sub">2:30 &nbsp;·&nbsp; 2 minutes, 30 seconds &nbsp;·&nbsp; 150 sec</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /directions-grid -->
+
+  <!-- ── Evaluation Guide ──────────────────────────────────── -->
+  <div class="eval-guide">
+    <h2>Evaluation Guide — What to look for</h2>
+    <div class="eval-grid">
+      <div class="eval-item">
+        <div><span class="check">✓</span><strong>Layout hierarchy</strong></div>
+        <p>Which layout puts the result in the right place of dominance?</p>
+      </div>
+      <div class="eval-item">
+        <div><span class="check">✓</span><strong>Unit selector feel</strong></div>
+        <p>Pill row, tile grid, or vertical list — which feels most natural to click?</p>
+      </div>
+      <div class="eval-item">
+        <div><span class="check">✓</span><strong>Result readability</strong></div>
+        <p>Can you read "2 min 30 sec" at a glance without any effort?</p>
+      </div>
+      <div class="eval-item">
+        <div><span class="check">✓</span><strong>Brand personality</strong></div>
+        <p>Does it feel like a sharp, trustworthy utility tool?</p>
+      </div>
+      <div class="eval-item">
+        <div><span class="check">✓</span><strong>Mobile friendliness</strong></div>
+        <p>Imagine squeezing this to 375px — which layout adapts best?</p>
+      </div>
+      <div class="eval-item">
+        <div><span class="check">✓</span><strong>First impression</strong></div>
+        <p>In 2 seconds, does a first-time user know exactly what to do?</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
