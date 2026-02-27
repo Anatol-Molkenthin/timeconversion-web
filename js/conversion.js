@@ -137,6 +137,11 @@ function buildStandardFormat(breakdown, unitKey) {
     const smallest = fields[fields.length - 1];
     return `0 ${ABBR_LABELS[smallest]}`;
   }
+  // When input unit is 'seconds' and seconds=0 but ms>0, show "0 sec {X}ms" not just "{X}ms".
+  // Without this, "500 ms" loses the seconds context the user typed in (FR23 smart precision).
+  if (unitKey === 'seconds' && breakdown.seconds === 0) {
+    parts.unshift(`0 ${ABBR_LABELS.seconds}`);
+  }
   return parts.join(' ');
 }
 
